@@ -40,3 +40,26 @@ const t = initTRPC.context<typeof createTRPCContext>().create({
         };
     },
 });
+
+/**
+ * 3. ROUTER & PROCEDURE HELPERS
+ * These are the building blocks of the API.
+ */
+export const createTRPCRouter = t.router;
+
+// Public Procedure (Anyone can call this)
+export const publicProcedure = t.procedure;
+
+// Protected Procedure (Only logged-in users can call this; "get_current_user" dependency Python equivalent
+export const protectedProcedure = t.procedure.use(({ ctx, next }) => {
+    if (!ctx.userId) {
+        throw new TRPCError({ code: "UNAUTHORIZED" });
+    }
+    return next({
+        ctx: {
+            // Infers the `session` as non-nullable
+            session: { ...ctx.session, user: ctx.session },
+            userId: ctx.userId,
+        },
+    });
+});
