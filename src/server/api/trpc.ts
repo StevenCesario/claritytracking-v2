@@ -1,5 +1,4 @@
 import { initTRPC, TRPCError } from "@trpc/server";
-import { type NextRequest } from "next/server";
 import { auth } from "@clerk/nextjs/server";
 import { db } from "@/db";
 import { z, ZodError } from "zod";
