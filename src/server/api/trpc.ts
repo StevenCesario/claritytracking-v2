@@ -2,6 +2,7 @@ import { initTRPC, TRPCError } from "@trpc/server";
 import { auth } from "@clerk/nextjs/server";
 import { db } from "@/db";
 import { z, ZodError } from "zod";
+import superjson from "superjson";
 
 /**
  * 1. CONTEXT
@@ -26,6 +27,7 @@ export const createTRPCContext = async (opts: { headers: Headers }) => {
  */
 
 const t = initTRPC.context<typeof createTRPCContext>().create({
+    transformer: superjson, // EDIT: Now configured to use SuperJSON
     errorFormatter({ shape, error }) {
         return {
             ...shape,
